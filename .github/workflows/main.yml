@@ -23,8 +23,8 @@ jobs:
           distribution: 'temurin'
 
       # Build and test the application using Maven
-      #- name: Build and test with Maven
-      #  run: mvn clean verify --file ./simple-api/pom.xml
+      - name: Build and test with Maven
+        run: mvn clean verify --file ./simple-api/pom.xml
 
       # Run SonarQube analysis
       - name: Run SonarQube analysis
