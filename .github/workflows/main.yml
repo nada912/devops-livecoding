@@ -1,4 +1,5 @@
-name: CI DevOps 2024
+name: CI/CD DevOps 2024
+
 on:
   push:
     branches:
@@ -11,7 +12,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       # Checkout the repository
-      - uses: actions/checkout@v2.5.0
+      - name: Checkout code
+        uses: actions/checkout@v2.5.0
 
       # Set up JDK 17
       - name: Set up JDK 17
@@ -23,3 +25,39 @@ jobs:
       # Build and test the application using Maven
       - name: Build and test with Maven
         run: mvn clean verify --file ./simple-api/pom.xml
+
+  build-and-push-docker-images:
+    needs: test-backend
+    runs-on: ubuntu-22.04
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2.5.0
+
+      # Log in to DockerHub
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Build and push the Docker image for the backend
+      - name: Build and push backend image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./simple-api
+          tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-simple-api:latest
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      # Build and push the Docker image for the database
+      - name: Build and push database image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./database
+          tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-database:latest
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      # Build and push the Docker image for the HTTP server
+      - name: Build and push HTTP server image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./httpd
+          tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-httpd:latest
+          push: ${{ github.ref == 'refs/heads/main' }}
