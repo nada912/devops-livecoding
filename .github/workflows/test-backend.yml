@@ -31,5 +31,4 @@ jobs:
 
       # Run SonarQube analysis
       - name: Run SonarQube analysis
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=nada912_devops-livecoding -Dsonar.organization=nada912 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} --file ./simple-api/pom.xml
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=nada912_devops-livecoding -Dsonar.organization=nada912 -Dsonar.host.url=
