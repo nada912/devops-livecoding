@@ -11,24 +11,24 @@ on:
       - develop
 
 jobs:
-  test-backend:
-    runs-on: ubuntu-22.04
-    steps:
-      # Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v2.5.0
-
-      # Set up JDK 17
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      # Build and test the application using Maven
-      - name: Build and test with Maven
-        run: mvn clean verify --file ./simple-api/pom.xml
-
-      # Run SonarQube analysis
-      - name: Run SonarQube analysis
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=nada912_devops-livecoding -Dsonar.organization=nada912 -Dsonar.host.url=
+    test-backend:
+        runs-on: ubuntu-22.04
+        steps:
+          # Checkout the repository
+          - name: Checkout code
+            uses: actions/checkout@v2.5.0
+    
+          # Set up JDK 17
+          - name: Set up JDK 17
+            uses: actions/setup-java@v3
+            with:
+              java-version: '17'
+              distribution: 'temurin'
+    
+          # Build and test the application using Maven
+          - name: Build and test with Maven
+            run: mvn clean verify --file ./simple-api/pom.xml
+    
+          # Run SonarQube analysis
+          - name: Run SonarQube analysis
+            run: mvn -B verify sonar:sonar -Dsonar.projectKey=nada912_devops-livecoding -Dsonar.organization=nada912 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} --file ./simple-api/pom.xml
